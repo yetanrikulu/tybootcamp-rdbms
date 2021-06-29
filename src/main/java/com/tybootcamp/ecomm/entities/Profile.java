@@ -8,23 +8,9 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@Entity
+@Embeddable
 public class Profile
 {
-    @Id
-    private Long id;
-    @OneToOne
-    @JoinColumn(nullable = false)
-    @MapsId
-    @JsonIgnore
-    private Seller seller;
-
-
-    @OneToOne
-    @JoinColumn(nullable = false)
-    @MapsId
-    @JsonIgnore
-    private Customer customer;
 
     @NotNull
     private String firstName;
@@ -44,32 +30,12 @@ public class Profile
     {
     }
 
-    public Profile(Seller seller, String firstName, String lastName, Gender gender)
+    public Profile(String firstName, String lastName, Gender gender)
     {
-        this.seller = seller;
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-    }
-
-    public long getId()
-    {
-        return id;
-    }
-
-    public void setId(long id)
-    {
-        this.id = id;
-    }
-
-    public Seller getSeller()
-    {
-        return seller;
-    }
-
-    public void setSeller(Seller seller)
-    {
-        this.seller = seller;
     }
 
     public String getFirstName()
@@ -141,4 +107,6 @@ public class Profile
     {
         this.gender = gender;
     }
+
+
 }

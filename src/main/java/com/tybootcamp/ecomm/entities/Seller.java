@@ -14,11 +14,10 @@ public class Seller
     @NotNull
     private String accountId;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "seller", orphanRemoval = true)
+    @Embedded
     private Profile profile;
 
-    public Seller()
-    {
+    public Seller(){
     }
 
     public Seller(String accountId)

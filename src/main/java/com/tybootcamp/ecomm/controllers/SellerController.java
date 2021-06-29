@@ -41,7 +41,7 @@ public class SellerController {
     public ResponseEntity<Seller> addNewSeller(@Valid @RequestBody Seller seller)
     {
         Seller sellerEntity = new Seller(seller.getAccountId());
-        Profile profile = new Profile(sellerEntity, seller.getProfile().getFirstName(), seller.getProfile().getLastName(), seller.getProfile().getGender());
+        Profile profile = new Profile(seller.getProfile().getFirstName(), seller.getProfile().getLastName(), seller.getProfile().getGender());
         sellerEntity.setProfile(profile);
         sellerEntity.getProfile().setWebsite(seller.getProfile().getWebsite());
         sellerEntity.getProfile().setAddress(seller.getProfile().getAddress());

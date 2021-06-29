@@ -11,7 +11,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
+    @Embedded
     private Profile profile;
 
     @NotNull
@@ -19,6 +19,10 @@ public class Customer {
 
     public Customer(){
 
+    }
+
+    public Customer (String name){
+        this.name =name;
     }
 
     public Long getId() {
@@ -44,4 +48,6 @@ public class Customer {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }
