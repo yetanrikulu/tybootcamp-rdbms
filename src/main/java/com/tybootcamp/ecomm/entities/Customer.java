@@ -17,8 +17,18 @@ public class Customer {
     @NotNull
     private String name;
 
-    public Customer(){
+    @OneToOne
+    private Basket basket;
 
+
+    public Customer(){
+        basket=new Basket();
+    }
+
+    public Customer(Profile profile, String name, Basket basket) {
+        this.profile = profile;
+        this.name = name;
+        this.basket = basket;
     }
 
     public Customer (String name){
@@ -49,5 +59,25 @@ public class Customer {
         this.name = name;
     }
 
+    public Basket getBasket() {
+        return basket;
+    }
+
+    public void setBasket(Basket basket) {
+        this.basket = basket;
+    }
+
+    @Override
+    public String toString()
+    {
+        if (profile == null)
+        {
+            return super.toString();
+        }
+        else
+        {
+            return getProfile().getFirstName() + " " + getProfile().getLastName();
+        }
+    }
 
 }

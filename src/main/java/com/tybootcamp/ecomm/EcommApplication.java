@@ -2,25 +2,21 @@ package com.tybootcamp.ecomm;
 
 import com.github.javafaker.Book;
 import com.github.javafaker.Faker;
+import com.tybootcamp.ecomm.controllers.CustomerController;
+import com.tybootcamp.ecomm.entities.*;
 import com.tybootcamp.ecomm.enums.Gender;
-import com.tybootcamp.ecomm.entities.Category;
-import com.tybootcamp.ecomm.entities.Product;
-import com.tybootcamp.ecomm.entities.Profile;
-import com.tybootcamp.ecomm.entities.Seller;
-import com.tybootcamp.ecomm.repositories.CategoryRepository;
-import com.tybootcamp.ecomm.repositories.ProductJpaRepository;
-import com.tybootcamp.ecomm.repositories.SellerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tybootcamp.ecomm.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @EnableJpaRepositories(basePackages = "com.tybootcamp.ecomm.repositories")
@@ -29,11 +25,15 @@ public class EcommApplication implements CommandLineRunner {
     private final CategoryRepository _categoryRepository;
     private final ProductJpaRepository _productJpaRepository;
     private final SellerRepository _sellerRepository;
+    private final CustomerRepository _customerRepository;
+    private final BasketRepository _basketRepository;
 
-    public EcommApplication(CategoryRepository _categoryRepository, ProductJpaRepository _productJpaRepository, SellerRepository _sellerRepository) {
+    public EcommApplication(CategoryRepository _categoryRepository, ProductJpaRepository _productJpaRepository, SellerRepository _sellerRepository, CustomerRepository customerRepository, BasketRepository basketRepository) {
         this._categoryRepository = _categoryRepository;
         this._productJpaRepository = _productJpaRepository;
         this._sellerRepository = _sellerRepository;
+        this._customerRepository = customerRepository;
+        this._basketRepository = basketRepository;
     }
 
     public static void main(String[] args) {
@@ -42,6 +42,7 @@ public class EcommApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+
         _sellerRepository.getById(12l);
         //--------------Create two sellers-----------------------------------------
         Seller judy = new Seller("Judy's account id = 879");
@@ -79,7 +80,9 @@ public class EcommApplication implements CommandLineRunner {
         Category finalArtCategory = artCategory;
         Category finalWallDecorCategory = wallDecorCategory;
 
-        IntStream.range(1, 100000000).parallel().forEach(
+
+
+        IntStream.range(1, 50).parallel().forEach(
                 i -> {
                     Book book = new Faker().book();
                     String author = book.author();
@@ -87,8 +90,32 @@ public class EcommApplication implements CommandLineRunner {
                             book.title(),
                             42.34f, imageUrls, finalMichael, new HashSet<>(Arrays.asList(finalArtCategory, finalWallDecorCategory)));
                     _productJpaRepository.save(pictureProduct);
+
                 }
         );
+
+        // ----- Create 1 customer (and also 1 product)  ---- //
+        Book book = new Faker().book();
+        String author = book.author();
+        Product pictureProduct = new Product(author, author,
+                book.title(),
+                42.34f, imageUrls, finalMichael, new HashSet<>(Arrays.asList(finalArtCategory, finalWallDecorCategory)));
+        _productJpaRepository.save(pictureProduct);
+
+        Map<Product,Integer> icerik = new HashMap<>();
+        icerik.put(pictureProduct,20);
+
+
+        Profile customerProfile = new Profile("Michael", "Jordan", Gender.Male);
+        Basket basket = new Basket(icerik);
+        _basketRepository.save(basket);
+        Customer michaelJordan = new Customer(customerProfile,"Michael Jordan", basket);
+        _customerRepository.save(michaelJordan);
+
+
+
+
+
 
     }
 }

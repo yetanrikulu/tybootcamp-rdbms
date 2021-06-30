@@ -1,6 +1,7 @@
 package com.tybootcamp.ecomm.controllers;
 
 import com.tybootcamp.ecomm.entities.Category;
+import com.tybootcamp.ecomm.entities.Customer;
 import com.tybootcamp.ecomm.entities.Product;
 import com.tybootcamp.ecomm.entities.Seller;
 import com.tybootcamp.ecomm.repositories.CategoryRepository;
@@ -9,12 +10,7 @@ import com.tybootcamp.ecomm.repositories.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -35,12 +31,22 @@ public class ProductController {
         this.sellerRepository = sellerRepository;
         this.categoryRepository = categoryRepository;
     }
-
+/*
     @GetMapping(path = "/")
     public List<Product> getAllProducts()
     {
         return productJpaRepository.findAll();
+    }*/
+
+
+    //-------------------------------------------------------- Silinecek
+    @GetMapping(path = "/")
+    public ResponseEntity<?> getAllproductById(@RequestParam (value = "id") int id)
+    {
+        Product product = productJpaRepository.findById((long) id).orElseThrow(EntityNotFoundException::new);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
+    //---------------------------------------------------------------Silinecek
 
     @PostMapping(path = "/")
     public Object addNewProduct(@RequestBody Product product)
