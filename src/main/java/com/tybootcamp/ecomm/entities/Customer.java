@@ -20,7 +20,6 @@ public class Customer {
     @OneToOne
     private Basket basket;
 
-
     public Customer(){
         basket=new Basket();
     }
@@ -78,6 +77,10 @@ public class Customer {
         {
             return getProfile().getFirstName() + " " + getProfile().getLastName();
         }
+    }
+
+    public void clearBasket(){
+        this.basket.getContent().clear();
     }
 
 }

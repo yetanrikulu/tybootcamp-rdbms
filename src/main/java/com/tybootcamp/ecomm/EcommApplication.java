@@ -2,17 +2,12 @@ package com.tybootcamp.ecomm;
 
 import com.github.javafaker.Book;
 import com.github.javafaker.Faker;
-import com.tybootcamp.ecomm.controllers.CustomerController;
 import com.tybootcamp.ecomm.entities.*;
 import com.tybootcamp.ecomm.enums.Gender;
 import com.tybootcamp.ecomm.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.text.SimpleDateFormat;
@@ -27,13 +22,15 @@ public class EcommApplication implements CommandLineRunner {
     private final SellerRepository _sellerRepository;
     private final CustomerRepository _customerRepository;
     private final BasketRepository _basketRepository;
+    private final OrderRepository _orderRepository;
 
-    public EcommApplication(CategoryRepository _categoryRepository, ProductJpaRepository _productJpaRepository, SellerRepository _sellerRepository, CustomerRepository customerRepository, BasketRepository basketRepository) {
+    public EcommApplication(CategoryRepository _categoryRepository, ProductJpaRepository _productJpaRepository, SellerRepository _sellerRepository, CustomerRepository customerRepository, BasketRepository basketRepository, OrderRepository orderRepository) {
         this._categoryRepository = _categoryRepository;
         this._productJpaRepository = _productJpaRepository;
         this._sellerRepository = _sellerRepository;
         this._customerRepository = customerRepository;
         this._basketRepository = basketRepository;
+        this._orderRepository = orderRepository;
     }
 
     public static void main(String[] args) {
@@ -82,7 +79,7 @@ public class EcommApplication implements CommandLineRunner {
 
 
 
-        IntStream.range(1, 50).parallel().forEach(
+        IntStream.range(1, 10).parallel().forEach(
                 i -> {
                     Book book = new Faker().book();
                     String author = book.author();
@@ -94,7 +91,8 @@ public class EcommApplication implements CommandLineRunner {
                 }
         );
 
-        // ----- Create 1 customer (and also 1 product)  ---- //
+        // ----- Create a customer (and also a product)  ---- //
+
         Book book = new Faker().book();
         String author = book.author();
         Product pictureProduct = new Product(author, author,
@@ -112,7 +110,10 @@ public class EcommApplication implements CommandLineRunner {
         Customer michaelJordan = new Customer(customerProfile,"Michael Jordan", basket);
         _customerRepository.save(michaelJordan);
 
+        //-- Create an Order -- //
 
+        Siparis siparis = new Siparis(michaelJordan);
+        _orderRepository.save(siparis);
 
 
 

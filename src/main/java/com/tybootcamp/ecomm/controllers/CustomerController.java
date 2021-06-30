@@ -19,38 +19,19 @@ import javax.validation.Valid;
 public class CustomerController {
 
     @Autowired
-    private  CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
     private ProductJpaRepository productJpaRepository;
 
     @PostMapping("/")
-    public void addProductToBasket(@Valid @RequestBody Customer customer, @Valid @RequestBody Product product){
-        if (customer.getBasket().getContent().containsKey(product)){
-            customer.getBasket().getContent().put(product, customer.getBasket().getContent().get(product)+1);
-        }
-        else{
-            customer.getBasket().getContent().put(product,1);
+    public ResponseEntity<?> addProductToBasket(@Valid @RequestBody Customer customer, @Valid @RequestBody Product product) {
+        if (customer.getBasket().getContent().containsKey(product)) {
+            customer.getBasket().getContent().put(product, customer.getBasket().getContent().get(product) + 1);
+        } else {
+            customer.getBasket().getContent().put(product, 1);
         }
         customerRepository.save(customer);
-    }
-
-    @PostMapping("/")
-    public void order(@Valid @RequestBody Customer customer){
-
-    }
-
-    //------------------------------------------------------------------ Silinecek
-    @GetMapping("/")
-    public ResponseEntity<?> deneme(@RequestParam(value ="id") int id){
-        Customer customer = customerRepository.findById((long) id).orElseThrow(EntityNotFoundException::new);
-
-
-
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
-    //------------------------------------------------------------------ Silinecek
-
-
-
 }

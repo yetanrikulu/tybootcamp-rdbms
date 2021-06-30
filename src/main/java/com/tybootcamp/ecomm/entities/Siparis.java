@@ -1,10 +1,11 @@
 package com.tybootcamp.ecomm.entities;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-public class Order {
+public class Siparis {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,13 +17,15 @@ public class Order {
     @CollectionTable(joinColumns={ @JoinColumn(name="order_id") })
     @Column(name="piece")
     @MapKeyJoinColumn(name="product_id")
-    private Map<Product,Integer> content;
+    private Map<Product,Integer> content = new HashMap<>();
 
-    public Order(){}
+    public Siparis(){
 
-    public Order(Long customerId, Map<Product, Integer> content) {
-        this.customerId = customerId;
-        this.content = content;
+    }
+
+    public Siparis(Customer customer) {
+        this.customerId = customer.getId();
+        customer.getBasket().getContent().forEach((k,v) -> this.content.put(k,v));
     }
 
     public Long getId() {
